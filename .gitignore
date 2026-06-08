@@ -1,0 +1,32 @@
+# === MAC OS específicos ===
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotbackup
+
+# === IDEs (IntelliJ / Eclipse / VS Code) ===
+.idea/
+*.iml
+*.iws
+.classpath
+.project
+.settings/
+.vscode/
+
+# === Maven y Java (Compilación y Binarios) ===
+**/target/
+*.jar
+*.war
+*.ear
+*.rar
+*.class
+
+# === Archivos de registro (Logs) ===
+*.log
