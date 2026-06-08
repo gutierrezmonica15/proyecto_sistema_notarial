@@ -6,12 +6,12 @@
 USE sistema_notarial;
 
 -- ── Usuarios ──────────────────────────────────────────────
-INSERT INTO usuarios (nombres, apellidos, correo, rol, activo) VALUES
-  ('Roberto', 'Navarro',  'r.navarro@notaria.co',  'Notario',              TRUE),
-  ('Juan',    'Pérez',    'j.perez@notaria.co',    'Protocolista',         TRUE),
-  ('María',   'Gómez',    'm.gomez@notaria.co',    'Liquidador',           TRUE),
-  ('Ana',     'Torres',   'a.torres@notaria.co',   'Protocolista',         TRUE),
-  ('Carlos',  'Ruiz',     'c.ruiz@notaria.co',     'Operador_de_Escaner',  FALSE);
+INSERT INTO usuarios (nombres, apellidos, correo, password, rol, activo) VALUES
+  ('Roberto', 'Navarro',  'r.navarro@notaria.co',  'Monik2026@', 'Notario',              TRUE),
+  ('Juan',    'Pérez',    'j.perez@notaria.co',    'Monik2026@', 'Protocolista',         TRUE),
+  ('María',   'Gómez',    'm.gomez@notaria.co',    'Monik2026@', 'Liquidador',           TRUE),
+  ('Ana',     'Torres',   'a.torres@notaria.co',   'Monik2026@', 'Protocolista',         TRUE),
+  ('Carlos',  'Ruiz',     'c.ruiz@notaria.co',     'Monik2026@', 'Operador_de_Escaner',  FALSE);
 
 -- ── Escrituras ────────────────────────────────────────────
 INSERT INTO escrituras (numero, acto, protocolista, estado, ced_comprador, ced_vendedor, fecha_radicacion) VALUES

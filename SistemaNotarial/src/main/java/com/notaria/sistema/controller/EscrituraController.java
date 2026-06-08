@@ -3,7 +3,6 @@ package com.notaria.sistema.controller;
 import com.notaria.sistema.model.Escritura;
 import com.notaria.sistema.service.EscrituraService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,11 +15,14 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/escrituras")
-@RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class EscrituraController {
 
     private final EscrituraService escrituraService;
+
+    public EscrituraController(EscrituraService escrituraService) {
+        this.escrituraService = escrituraService;
+    }
 
     /**
      * GET /api/escrituras

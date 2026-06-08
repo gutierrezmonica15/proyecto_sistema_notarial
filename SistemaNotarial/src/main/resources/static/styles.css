@@ -134,6 +134,26 @@ html, body {
   font-weight: 500;
 }
 
+/* Separador visual entre módulos y botón de salida */
+.topbar-nav-divider {
+  display: inline-block;
+  width: 1px;
+  height: 20px;
+  background: rgba(255,255,255,0.25);
+  margin: 0 6px;
+  vertical-align: middle;
+}
+
+/* Botón Cerrar Sesión */
+.nav-btn-logout {
+  color: rgba(255,255,255,0.65);
+}
+
+.nav-btn-logout:hover {
+  background: rgba(163,45,45,0.35);
+  color: #fca5a5;
+}
+
 .topbar-user {
   display: flex;
   align-items: center;
@@ -707,6 +727,120 @@ tbody tr:hover td {
 
 .toast i {
   font-size: 16px;
+}
+
+/* --- Login Screen ----------------------------------------- */
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--bg-tertiary);
+}
+
+.login-card {
+  background: var(--bg-primary);
+  border: 0.5px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 40px 30px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+.login-title {
+  font-size: 26px;
+  font-weight: 500;
+  color: var(--text-primary);
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.login-group {
+  margin-bottom: 20px;
+}
+
+.login-group label {
+  font-size: 14px;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  font-weight: 400;
+  display: block;
+}
+
+.login-group input[type="email"],
+.login-group input[type="password"] {
+  height: 44px;
+  font-size: 14px;
+  border-color: var(--border-medium);
+}
+
+.login-options {
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--blue-600);
+}
+
+.login-btn {
+  width: 100%;
+  height: 44px;
+  font-size: 15px;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.login-forgot {
+  text-align: center;
+}
+
+.login-forgot a {
+  color: var(--blue-600);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.login-forgot a:hover {
+  text-decoration: underline;
+  color: var(--blue-800);
+}
+
+.login-error-msg {
+  font-size: 13px;
+  color: var(--red-600);
+  background: var(--red-50);
+  border: 0.5px solid #e5a0a0;
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  margin-bottom: 16px;
+  display: none;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-7px); }
+  40%       { transform: translateX(7px); }
+  60%       { transform: translateX(-4px); }
+  80%       { transform: translateX(4px); }
+}
+
+.login-card.shake {
+  animation: shake 0.35s ease;
 }
 
 /* --- Responsive ------------------------------------------- */

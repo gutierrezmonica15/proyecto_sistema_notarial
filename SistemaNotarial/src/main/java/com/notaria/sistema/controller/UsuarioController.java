@@ -16,11 +16,14 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/usuarios")
-@RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
+
+    public UsuarioController(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
+    }
 
     /**
      * GET /api/usuarios
@@ -29,6 +32,32 @@ public class UsuarioController {
     @GetMapping
     public ResponseEntity<List<Usuario>> listar() {
         return ResponseEntity.ok(usuarioService.listarTodos());
+    }
+
+    /**
+     * POST /api/login
+     * Autentica un usuario por correo y contraseña.
+     * Body JSON: { "correo":"...", "password":"..." }
+     */
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Map<String, String> credenciales) {
+        String correo   = credenciales.get("correo");
+        String password = credenciales.get("password");
+        if (correo == null || password == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Correo y contraseña son requeridos."));
+        }
+        try {
+            Usuario u = usuarioService.login(correo, password);
+            return ResponseEntity.ok(Map.of(
+                "id",             u.getId(),
+                "nombreCompleto", u.getNombreCompleto(),
+                "correo",         u.getCorreo(),
+                "rol",            u.getRol().toValue(),
+                "iniciales",      u.getIniciales()
+            ));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(401).body(Map.of("error", ex.getMessage()));
+        }
     }
 
     /**

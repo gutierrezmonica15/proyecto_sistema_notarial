@@ -2,7 +2,6 @@ package com.notaria.sistema.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -12,11 +11,6 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "escrituras")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Escritura {
 
     @Id
@@ -60,6 +54,10 @@ public class Escritura {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    // ── Constructores ────────────────────────────────────────
+    public Escritura() {}
+
+    // ── Lifecycle ────────────────────────────────────────────
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
@@ -70,6 +68,32 @@ public class Escritura {
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
+
+    // ── Getters ──────────────────────────────────────────────
+    public Integer getId()               { return id; }
+    public String getNumero()            { return numero; }
+    public String getActo()              { return acto; }
+    public String getProtocolista()      { return protocolista; }
+    public EstadoEscritura getEstado()   { return estado; }
+    public String getCedComprador()      { return cedComprador; }
+    public String getCedVendedor()       { return cedVendedor; }
+    public String getObservaciones()     { return observaciones; }
+    public LocalDate getFechaRadicacion() { return fechaRadicacion; }
+    public LocalDateTime getCreatedAt()  { return createdAt; }
+    public LocalDateTime getUpdatedAt()  { return updatedAt; }
+
+    // ── Setters ──────────────────────────────────────────────
+    public void setId(Integer id)                    { this.id = id; }
+    public void setNumero(String n)                  { this.numero = n; }
+    public void setActo(String a)                    { this.acto = a; }
+    public void setProtocolista(String p)            { this.protocolista = p; }
+    public void setEstado(EstadoEscritura e)         { this.estado = e; }
+    public void setCedComprador(String c)            { this.cedComprador = c; }
+    public void setCedVendedor(String c)             { this.cedVendedor = c; }
+    public void setObservaciones(String o)           { this.observaciones = o; }
+    public void setFechaRadicacion(LocalDate d)      { this.fechaRadicacion = d; }
+    public void setCreatedAt(LocalDateTime t)        { this.createdAt = t; }
+    public void setUpdatedAt(LocalDateTime t)        { this.updatedAt = t; }
 
     /** Estados del flujo de una escritura */
     public enum EstadoEscritura {

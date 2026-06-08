@@ -2,7 +2,6 @@ package com.notaria.sistema.service;
 
 import com.notaria.sistema.model.Usuario;
 import com.notaria.sistema.repository.UsuarioRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,15 +12,34 @@ import java.util.NoSuchElementException;
  * Lógica de negocio para el módulo de Usuarios.
  */
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepo;
 
+    public UsuarioService(UsuarioRepository usuarioRepo) {
+        this.usuarioRepo = usuarioRepo;
+    }
+
     /** Devuelve todos los usuarios */
     public List<Usuario> listarTodos() {
         return usuarioRepo.findAll();
+    }
+
+    /**
+     * Autentica un usuario por correo y contraseña.
+     * Lanza {@link IllegalArgumentException} si las credenciales son inválidas.
+     */
+    public Usuario login(String correo, String password) {
+        Usuario u = usuarioRepo.findByCorreo(correo)
+                .orElseThrow(() -> new IllegalArgumentException("Correo o contraseña incorrectos."));
+        if (!u.getActivo()) {
+            throw new IllegalArgumentException("El usuario está inactivo. Contacta al administrador.");
+        }
+        if (!u.getPassword().equals(password)) {
+            throw new IllegalArgumentException("Correo o contraseña incorrectos.");
+        }
+        return u;
     }
 
     /**
@@ -35,6 +53,10 @@ public class UsuarioService {
                     "El correo " + usuario.getCorreo() + " ya está registrado.");
         }
         usuario.setActivo(true);
+        // Asignar contraseña por defecto si no se proporcionó una
+        if (usuario.getPassword() == null || usuario.getPassword().isBlank()) {
+            usuario.setPassword("Monik2026@");
+        }
         return usuarioRepo.save(usuario);
     }
 

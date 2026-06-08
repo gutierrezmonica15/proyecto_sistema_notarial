@@ -36,7 +36,39 @@
 
 <body>
 
-  <div class="app-shell">
+  <!-- ╔══════════════════════════════════════╗ -->
+  <!-- ║            PANTALLA DE LOGIN           ║ -->
+  <!-- ╚══════════════════════════════════════╝ -->
+  <div class="login-container" id="login-container">
+    <div class="login-card">
+      <h2 class="login-title">Iniciar Sesión</h2>
+      
+      <div class="form-group login-group">
+        <label for="login-email">Correo electrónico</label>
+        <input type="email" id="login-email" placeholder="nombre@ejemplo.com">
+      </div>
+      
+      <div class="form-group login-group">
+        <label for="login-password">Contraseña</label>
+        <input type="password" id="login-password" placeholder="Contraseña">
+      </div>
+      
+      <div class="login-options">
+        <label class="checkbox-label">
+          <input type="checkbox" id="login-remember">
+          Recordarme
+        </label>
+      </div>
+      
+      <button class="btn btn-primary login-btn" onclick="iniciarSesion()">Ingresar</button>
+      
+      <div class="login-forgot">
+        <a href="#">¿Olvidaste tu contraseña?</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-shell" id="app-shell" style="display: none;">
 
     <!-- ╔══════════════════════════════════════╗ -->
     <!-- ║            BARRA SUPERIOR            ║ -->
@@ -56,6 +88,12 @@
         </button>
         <button class="nav-btn" onclick="showScreen('usuarios', this)">
           <i class="ti ti-users" aria-hidden="true"></i> Usuarios
+        </button>
+
+        <span class="topbar-nav-divider" aria-hidden="true"></span>
+
+        <button class="nav-btn nav-btn-logout" onclick="cerrarSesion()" aria-label="Cerrar sesión">
+          <i class="ti ti-logout" aria-hidden="true"></i> Cerrar Sesión
         </button>
       </nav>
 

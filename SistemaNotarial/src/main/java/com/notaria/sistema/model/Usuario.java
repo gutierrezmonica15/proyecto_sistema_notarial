@@ -2,7 +2,7 @@ package com.notaria.sistema.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 
 /**
@@ -11,11 +11,6 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "usuarios")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Usuario {
 
     @Id
@@ -40,17 +35,46 @@ public class Usuario {
     @NotNull(message = "El rol es obligatorio")
     private RolUsuario rol;
 
+    @Column(nullable = false, length = 255)
+    @JsonIgnore   // nunca se expone la contraseña en la API REST
+    private String password = "Monik2026@";
+
     @Column(nullable = false)
     private Boolean activo = true;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    // ── Constructores ────────────────────────────────────────
+    public Usuario() {}
+
+    // ── Lifecycle ────────────────────────────────────────────
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
 
+    // ── Getters ──────────────────────────────────────────────
+    public Integer getId()          { return id; }
+    public String getNombres()      { return nombres; }
+    public String getApellidos()    { return apellidos; }
+    public String getCorreo()       { return correo; }
+    public RolUsuario getRol()      { return rol; }
+    public String getPassword()     { return password; }
+    public Boolean getActivo()      { return activo; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+
+    // ── Setters ──────────────────────────────────────────────
+    public void setId(Integer id)           { this.id = id; }
+    public void setNombres(String nombres)  { this.nombres = nombres; }
+    public void setApellidos(String a)      { this.apellidos = a; }
+    public void setCorreo(String correo)    { this.correo = correo; }
+    public void setRol(RolUsuario rol)      { this.rol = rol; }
+    public void setPassword(String p)       { this.password = p; }
+    public void setActivo(Boolean activo)   { this.activo = activo; }
+    public void setCreatedAt(LocalDateTime t) { this.createdAt = t; }
+
+    // ── Campos transient ─────────────────────────────────────
     /** Obtiene las iniciales del usuario para el avatar */
     @Transient
     public String getIniciales() {

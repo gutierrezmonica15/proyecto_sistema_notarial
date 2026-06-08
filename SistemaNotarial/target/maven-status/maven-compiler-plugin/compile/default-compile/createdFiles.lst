@@ -1,0 +1,17 @@
+com\notaria\sistema\model\Boleta.class
+com\notaria\sistema\model\Usuario.class
+com\notaria\sistema\repository\UsuarioRepository.class
+com\notaria\sistema\controller\UsuarioController.class
+com\notaria\sistema\model\Escritura$EstadoEscritura.class
+com\notaria\sistema\controller\EscrituraController.class
+com\notaria\sistema\model\Usuario$RolUsuario.class
+com\notaria\sistema\model\Boleta$EstadoBoleta.class
+com\notaria\sistema\model\Escritura.class
+com\notaria\sistema\repository\EscrituraRepository.class
+com\notaria\sistema\service\BoletaService$ResumenBoletas.class
+com\notaria\sistema\service\UsuarioService.class
+com\notaria\sistema\service\BoletaService.class
+com\notaria\sistema\SistemaNotarialApp.class
+com\notaria\sistema\controller\BoletaController.class
+com\notaria\sistema\repository\BoletaRepository.class
+com\notaria\sistema\service\EscrituraService.class

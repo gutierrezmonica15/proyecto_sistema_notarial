@@ -2,7 +2,6 @@ package com.notaria.sistema.service;
 
 import com.notaria.sistema.model.Escritura;
 import com.notaria.sistema.repository.EscrituraRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,11 +14,14 @@ import java.util.NoSuchElementException;
  * Lógica de negocio para el módulo de Escrituras.
  */
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class EscrituraService {
 
     private final EscrituraRepository escrituraRepo;
+
+    public EscrituraService(EscrituraRepository escrituraRepo) {
+        this.escrituraRepo = escrituraRepo;
+    }
 
     /** Devuelve todas las escrituras ordenadas por fecha DESC */
     public List<Escritura> listarTodas() {

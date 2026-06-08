@@ -526,6 +526,87 @@ async function eliminarUsuario(id, nombre) {
   } catch (e) { /* ya manejado */ }
 }
 
+/* ── Cerrar sesión ───────────────────────────────────────── */
+function cerrarSesion() {
+  // Ocultar sistema y mostrar login
+  $('#app-shell').style.display = 'none';
+  $('#login-container').style.display = 'flex';
+
+  // Limpiar campos del formulario
+  $('#login-email').value    = '';
+  $('#login-password').value = '';
+  const remember = document.getElementById('login-remember');
+  if (remember) remember.checked = false;
+
+  // Ocultar mensaje de error anterior si quedó visible
+  const errEl = $('#login-error');
+  if (errEl) errEl.style.display = 'none';
+
+  // Restaurar avatar y nombre a los valores por defecto
+  const avatarEl = document.querySelector('.topbar .avatar');
+  const nombreEl = document.querySelector('.topbar-user span');
+  if (avatarEl) avatarEl.textContent = 'JP';
+  if (nombreEl) nombreEl.textContent = 'Juan Protocolista';
+
+  // Devolver la navegación al estado inicial (Boletas activo)
+  $$('.nav-btn').forEach(b => b.classList.remove('active'));
+  const btnBoletas = document.querySelector('.nav-btn[onclick*="boletas"]');
+  if (btnBoletas) btnBoletas.classList.add('active');
+}
+
+/* ── Login ───────────────────────────────────────────────── */
+async function iniciarSesion() {
+  const correo   = $('#login-email').value.trim();
+  const password = $('#login-password').value;
+
+  if (!correo || !password) {
+    mostrarErrorLogin('Por favor, ingresa tu correo y contraseña.');
+    return;
+  }
+
+  try {
+    const usuario = await apiFetch('/api/usuarios/login', {
+      method: 'POST',
+      body: JSON.stringify({ correo, password }),
+    });
+
+    // Actualizar el avatar y nombre del usuario en la barra superior
+    const avatarEl = document.querySelector('.topbar .avatar');
+    const nombreEl = document.querySelector('.topbar-user span');
+    if (avatarEl) avatarEl.textContent = usuario.iniciales || '??';
+    if (nombreEl) nombreEl.textContent = usuario.nombreCompleto || correo;
+
+    // Ir al sistema en pantalla Boletas
+    $('#login-container').style.display = 'none';
+    $('#app-shell').style.display = 'flex';
+
+    const btnBoletas = document.querySelector('.nav-btn[onclick*="boletas"]');
+    if (btnBoletas) showScreen('boletas', btnBoletas);
+
+    showToast(`Bienvenido/a, ${usuario.nombreCompleto}`, 'success');
+
+  } catch (e) {
+    // apiFetch ya llamó showToast; además mostrar el mensaje en el formulario
+    mostrarErrorLogin(e.message || 'Correo o contraseña incorrectos.');
+  }
+}
+
+function mostrarErrorLogin(msg) {
+  let errEl = $('#login-error');
+  if (!errEl) {
+    errEl = document.createElement('div');
+    errEl.id = 'login-error';
+    errEl.className = 'login-error-msg';
+    $('#login-password').parentNode.insertAdjacentElement('afterend', errEl);
+  }
+  errEl.textContent = msg;
+  errEl.style.display = 'block';
+  const card = document.querySelector('.login-card');
+  card.classList.remove('shake');
+  void card.offsetWidth;
+  card.classList.add('shake');
+}
+
 /* ── Inicialización ──────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', function () {
   cargarBoletas();

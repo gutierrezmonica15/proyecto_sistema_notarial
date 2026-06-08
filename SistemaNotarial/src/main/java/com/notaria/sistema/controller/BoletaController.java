@@ -3,7 +3,6 @@ package com.notaria.sistema.controller;
 import com.notaria.sistema.model.Boleta;
 import com.notaria.sistema.service.BoletaService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,11 +15,14 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/boletas")
-@RequiredArgsConstructor
 @CrossOrigin(origins = "*")  // Permite llamadas desde el frontend
 public class BoletaController {
 
     private final BoletaService boletaService;
+
+    public BoletaController(BoletaService boletaService) {
+        this.boletaService = boletaService;
+    }
 
     /**
      * GET /api/boletas

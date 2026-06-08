@@ -2,7 +2,6 @@ package com.notaria.sistema.service;
 
 import com.notaria.sistema.model.Boleta;
 import com.notaria.sistema.repository.BoletaRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,11 +12,14 @@ import java.util.NoSuchElementException;
  * Lógica de negocio para el módulo de Boletas de Rentas.
  */
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class BoletaService {
 
     private final BoletaRepository boletaRepo;
+
+    public BoletaService(BoletaRepository boletaRepo) {
+        this.boletaRepo = boletaRepo;
+    }
 
     /** Devuelve todas las boletas ordenadas por fecha de liquidación DESC */
     public List<Boleta> listarTodas() {
