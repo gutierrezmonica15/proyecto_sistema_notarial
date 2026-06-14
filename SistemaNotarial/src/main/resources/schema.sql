@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
     nombres     VARCHAR(100)  NOT NULL,
     apellidos   VARCHAR(100)  NOT NULL,
     correo      VARCHAR(150)  NOT NULL UNIQUE,
-    password    VARCHAR(255)  NOT NULL DEFAULT 'Monik2026@' COMMENT 'Contraseña de acceso al sistema',
+    password    VARCHAR(32)   NOT NULL DEFAULT 'e740a4cff24ec5be7296cb210dc983b4' COMMENT 'Hash MD5 de la contraseña (MD5 de Monik2026@)',
     rol         ENUM(
                   'Notario',
                   'Liquidador',
@@ -66,4 +66,4 @@ CREATE TABLE IF NOT EXISTS usuarios (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Script para agregar la columna en BD existente (ejecutar sólo si la tabla ya existe):
--- ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS password VARCHAR(255) NOT NULL DEFAULT 'Monik2026@' COMMENT 'Contraseña de acceso al sistema';
+-- ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS password VARCHAR(32) NOT NULL DEFAULT 'e740a4cff24ec5be7296cb210dc983b4' COMMENT 'Hash MD5 de la contraseña';

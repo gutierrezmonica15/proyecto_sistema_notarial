@@ -5,20 +5,40 @@ import com.notaria.sistema.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
  * Lógica de negocio para el módulo de Usuarios.
+ * Las contraseñas se almacenan como hash MD5 de 32 caracteres en minúsculas.
  */
 @Service
 @Transactional(readOnly = true)
 public class UsuarioService {
 
+    /** Hash MD5 de la contraseña por defecto "Monik2026@" */
+    private static final String DEFAULT_PASSWORD_HASH = "e740a4cff24ec5be7296cb210dc983b4";
+
     private final UsuarioRepository usuarioRepo;
 
     public UsuarioService(UsuarioRepository usuarioRepo) {
         this.usuarioRepo = usuarioRepo;
+    }
+
+    /**
+     * Calcula el hash MD5 de una cadena y lo devuelve como string hex de 32 chars.
+     */
+    private String md5(String texto) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] digest = md.digest(texto.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            return String.format("%032x", new BigInteger(1, digest));
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("MD5 no disponible", e);
+        }
     }
 
     /** Devuelve todos los usuarios */
@@ -36,7 +56,8 @@ public class UsuarioService {
         if (!u.getActivo()) {
             throw new IllegalArgumentException("El usuario está inactivo. Contacta al administrador.");
         }
-        if (!u.getPassword().equals(password)) {
+        // Comparar el hash MD5 del password recibido con el almacenado
+        if (!u.getPassword().equals(md5(password))) {
             throw new IllegalArgumentException("Correo o contraseña incorrectos.");
         }
         return u;
@@ -53,9 +74,11 @@ public class UsuarioService {
                     "El correo " + usuario.getCorreo() + " ya está registrado.");
         }
         usuario.setActivo(true);
-        // Asignar contraseña por defecto si no se proporcionó una
+        // Hashear la contraseña con MD5 antes de persistir
         if (usuario.getPassword() == null || usuario.getPassword().isBlank()) {
-            usuario.setPassword("Monik2026@");
+            usuario.setPassword(DEFAULT_PASSWORD_HASH);
+        } else {
+            usuario.setPassword(md5(usuario.getPassword()));
         }
         return usuarioRepo.save(usuario);
     }

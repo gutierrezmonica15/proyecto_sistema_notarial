@@ -35,9 +35,9 @@ public class Usuario {
     @NotNull(message = "El rol es obligatorio")
     private RolUsuario rol;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false, length = 32)
     @JsonIgnore   // nunca se expone la contraseña en la API REST
-    private String password = "Monik2026@";
+    private String password = "e740a4cff24ec5be7296cb210dc983b4"; // MD5 de 'Monik2026@'
 
     @Column(nullable = false)
     private Boolean activo = true;

@@ -6,12 +6,13 @@
 USE sistema_notarial;
 
 -- ── Usuarios ──────────────────────────────────────────────
+-- Nota: las contraseñas están almacenadas como MD5 de 'Monik2026@'
 INSERT INTO usuarios (nombres, apellidos, correo, password, rol, activo) VALUES
-  ('Roberto', 'Navarro',  'r.navarro@notaria.co',  'Monik2026@', 'Notario',              TRUE),
-  ('Juan',    'Pérez',    'j.perez@notaria.co',    'Monik2026@', 'Protocolista',         TRUE),
-  ('María',   'Gómez',    'm.gomez@notaria.co',    'Monik2026@', 'Liquidador',           TRUE),
-  ('Ana',     'Torres',   'a.torres@notaria.co',   'Monik2026@', 'Protocolista',         TRUE),
-  ('Carlos',  'Ruiz',     'c.ruiz@notaria.co',     'Monik2026@', 'Operador_de_Escaner',  FALSE);
+  ('Roberto', 'Navarro',  'r.navarro@notaria.co',  'e740a4cff24ec5be7296cb210dc983b4', 'Notario',              TRUE),
+  ('Juan',    'Pérez',    'j.perez@notaria.co',    'e740a4cff24ec5be7296cb210dc983b4', 'Protocolista',         TRUE),
+  ('María',   'Gómez',    'm.gomez@notaria.co',    'e740a4cff24ec5be7296cb210dc983b4', 'Liquidador',           TRUE),
+  ('Ana',     'Torres',   'a.torres@notaria.co',   'e740a4cff24ec5be7296cb210dc983b4', 'Protocolista',         TRUE),
+  ('Carlos',  'Ruiz',     'c.ruiz@notaria.co',     'e740a4cff24ec5be7296cb210dc983b4', 'Operador_de_Escaner',  FALSE);
 
 -- ── Escrituras ────────────────────────────────────────────
 INSERT INTO escrituras (numero, acto, protocolista, estado, ced_comprador, ced_vendedor, fecha_radicacion) VALUES
