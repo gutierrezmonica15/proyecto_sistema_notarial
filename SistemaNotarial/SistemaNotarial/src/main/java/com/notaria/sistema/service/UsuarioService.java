@@ -1,0 +1,160 @@
+package com.notaria.sistema.service;
+
+import com.notaria.sistema.model.Usuario;
+import com.notaria.sistema.repository.UsuarioRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.List;
+import java.util.NoSuchElementException;
+
+/**
+ * Lógica de negocio para el módulo de Usuarios.
+ * Las contraseñas se almacenan como hash MD5 de 32 caracteres en minúsculas.
+ */
+@Service
+@Transactional(readOnly = true)
+public class UsuarioService {
+
+    /** Hash MD5 de la contraseña por defecto "Monik2026@" */
+    private static final String DEFAULT_PASSWORD_HASH = "e740a4cff24ec5be7296cb210dc983b4";
+
+    /** Contraseña por defecto asignada al recuperar la contraseña */
+    public static final String RECOVERY_PASSWORD = "Notaria123";
+
+    private final UsuarioRepository usuarioRepo;
+
+    public UsuarioService(UsuarioRepository usuarioRepo) {
+        this.usuarioRepo = usuarioRepo;
+    }
+
+    /**
+     * Calcula el hash MD5 de una cadena y lo devuelve como string hex de 32 chars.
+     */
+    private String md5(String texto) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] digest = md.digest(texto.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            return String.format("%032x", new BigInteger(1, digest));
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("MD5 no disponible", e);
+        }
+    }
+
+    /** Devuelve todos los usuarios */
+    public List<Usuario> listarTodos() {
+        return usuarioRepo.findAll();
+    }
+
+    /**
+     * Autentica un usuario por correo y contraseña.
+     * Lanza {@link IllegalArgumentException} si las credenciales son inválidas.
+     */
+    public Usuario login(String correo, String password) {
+        Usuario u = usuarioRepo.findByCorreo(correo)
+                .orElseThrow(() -> new IllegalArgumentException("Correo o contraseña incorrectos."));
+        if (!u.getActivo()) {
+            throw new IllegalArgumentException("El usuario está inactivo. Contacta al administrador.");
+        }
+        // Comparar el hash MD5 del password recibido con el almacenado
+        if (!u.getPassword().equals(md5(password))) {
+            throw new IllegalArgumentException("Correo o contraseña incorrectos.");
+        }
+        return u;
+    }
+
+    /**
+     * Recupera la contraseña de un usuario restableciéndola a la
+     * contraseña por defecto {@link #RECOVERY_PASSWORD}.
+     * Lanza {@link IllegalArgumentException} si el correo no existe o el usuario está inactivo.
+     */
+    @Transactional
+    public void recuperarPassword(String correo) {
+        Usuario u = usuarioRepo.findByCorreo(correo)
+                .orElseThrow(() -> new IllegalArgumentException("No existe un usuario registrado con ese correo."));
+        if (!u.getActivo()) {
+            throw new IllegalArgumentException("El usuario está inactivo. Contacta al administrador.");
+        }
+        u.setPassword(md5(RECOVERY_PASSWORD));
+        usuarioRepo.save(u);
+    }
+
+    /**
+     * Crea un nuevo usuario.
+     * Valida que el correo no esté duplicado.
+     */
+    @Transactional
+    public Usuario crear(Usuario usuario) {
+        if (usuarioRepo.existsByCorreo(usuario.getCorreo())) {
+            throw new IllegalArgumentException(
+                    "El correo " + usuario.getCorreo() + " ya está registrado.");
+        }
+        usuario.setActivo(true);
+        // Hashear la contraseña con MD5 antes de persistir
+        if (usuario.getPassword() == null || usuario.getPassword().isBlank()) {
+            usuario.setPassword(DEFAULT_PASSWORD_HASH);
+        } else {
+            usuario.setPassword(md5(usuario.getPassword()));
+        }
+        return usuarioRepo.save(usuario);
+    }
+
+    /**
+     * Activa o desactiva un usuario (toggle).
+     *
+     * @param id ID del usuario
+     * @return Usuario actualizado
+     */
+    @Transactional
+    public Usuario toggleActivo(Integer id) {
+        Usuario u = usuarioRepo.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Usuario no encontrado: " + id));
+        u.setActivo(!u.getActivo());
+        return usuarioRepo.save(u);
+    }
+
+    /**
+     * Obtiene un usuario por ID.
+     */
+    public Usuario obtenerPorId(Integer id) {
+        return usuarioRepo.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Usuario no encontrado: " + id));
+    }
+
+    /**
+     * Actualiza los datos de un usuario (nombres, apellidos, correo, rol).
+     * Si el correo cambia, valida que el nuevo no esté duplicado.
+     */
+    @Transactional
+    public Usuario actualizar(Integer id, Usuario datos) {
+        Usuario u = usuarioRepo.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Usuario no encontrado: " + id));
+
+        // Si el correo cambió, verificar que no esté en uso por otro usuario
+        if (!u.getCorreo().equalsIgnoreCase(datos.getCorreo())
+                && usuarioRepo.existsByCorreo(datos.getCorreo())) {
+            throw new IllegalArgumentException(
+                    "El correo " + datos.getCorreo() + " ya está en uso.");
+        }
+
+        u.setNombres(datos.getNombres());
+        u.setApellidos(datos.getApellidos());
+        u.setCorreo(datos.getCorreo());
+        u.setRol(datos.getRol());
+        return usuarioRepo.save(u);
+    }
+
+    /**
+     * Elimina un usuario permanentemente por ID.
+     */
+    @Transactional
+    public void eliminar(Integer id) {
+        if (!usuarioRepo.existsById(id)) {
+            throw new NoSuchElementException("Usuario no encontrado: " + id);
+        }
+        usuarioRepo.deleteById(id);
+    }
+}
